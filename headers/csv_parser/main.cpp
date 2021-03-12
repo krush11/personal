@@ -11,5 +11,5 @@ int main()
     ifstream file;
     file.open("sample.csv");
     csv obj;
-    obj.parse(file, ',', true);
+    obj.print_file(file, ',', '-');
 }
