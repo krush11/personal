@@ -1,30 +1,33 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#pragma once
+
 #include <vector>
-#include <fstream>
 #include <string>
+#include <iostream>
 
 class csv
 {
 public:
-    std::string get_line(std::ifstream &file, int line)
+    size_t parse(std::string data, size_t size)
     {
-        std::string s;
-        file.seekg(0, std::ios::beg);
-        for (int i = 0; i <= line; i++)
-            getline(file, s);
-
-        return s;
+        int position = data.find('\n');
+        if(position == std::string::npos)
+            return 0;
+        else
+            return position+1;
     }
 
-    std::vector<std::string> parse_string(std::string str, char delimiter = ',')
+    std::vector<std::string> parse_columns(std::string data)
     {
+        int position = data.find('\n');
+        std::string buffer = data.substr(0, position);
         std::vector<std::string> parsed_line;
-        while (!str.empty())
+        while (!buffer.empty())
         {
-            int delimiter_pos = str.find(delimiter);
-            std::string word = str.substr(0, delimiter_pos);
+            int delimiter_pos = buffer.find(',');
+            std::string word = buffer.substr(0, delimiter_pos);
 
             if (delimiter_pos == -1)
             {
@@ -33,45 +36,18 @@ public:
             }
             else
             {
-                str = str.substr(delimiter_pos + 1);
+                buffer = buffer.substr(delimiter_pos + 1);
                 parsed_line.push_back(word);
             }
         }
         return parsed_line;
     }
 
-    std::vector<std::vector<std::string>> parse_file(std::ifstream &file, char delimiter = ',')
+    std::string remove_prefix(std::string data, size_t size)
     {
-        std::string str;
-        std::vector<std::vector<std::string>> parsed_data;
-        while (getline(file, str))
-        {
-            std::vector<std::string> parsed_line = parse_string(str);
-            parsed_data.push_back(parsed_line);
-        }
-
-        return parsed_data;
-    }
-
-    void print_line(std::string str, char input_delim = ',', char output_delim = '\t')
-    {
-        std::vector<std::string> parsed_line = parse_string(str, input_delim);
-
-        for (int i = 0; i < parsed_line.size(); i++)
-            std::cout << parsed_line[i] << output_delim;
-    }
-
-    void print_file(std::ifstream &file, char input_delim = ',', char output_delim = '\t')
-    {
-        file.seekg(0, std::ios::beg);
-        std::vector<std::vector<std::string>> parsed_csv_data = parse_file(file, input_delim);
-
-        for (int i = 0; i < parsed_csv_data.size(); i++)
-        {
-            for (int j = 0; j < parsed_csv_data[i].size(); j++)
-                std::cout << parsed_csv_data[i][j] << output_delim;
-            std::cout << std::endl;
-        }
+        int position = data.find('\n');
+        data = data.substr(position+1);
+        return data;
     }
 };
 
