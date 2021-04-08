@@ -2,7 +2,7 @@
 
 # Error: Sub-process /usr/bin/dpkg returned an error code (1)
 # Reason: Happens when a software installation failed and the installer(dpkg) becomes corrupted
-# Possible repercussions: `sudo dpkg --configure -a` fails
+# Possible repercussions: `sudo dpkg --configure -a` fails and dpkg warnings
 # !IMPORTANT! : This package is not supposed to be run as a script even though its a .sh file
 
 # SOLUTION
